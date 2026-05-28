@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>spanner-design-loop — skills reference</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy:       #293A49;
+      --white:      #FFFFFF;
+      --azure:      #06A6ED;
+      --orange:     #E2672A;
+      --light-blue: #CAECF6;
+      --light-gray: #D4D8DB;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', 'Helvetica Neue', Helvetica, sans-serif;
+      font-size: 17.33px;
+      line-height: 25.33px;
+      color: var(--navy);
+      background: var(--white);
+    }
+
+    /* ── Header ── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--navy);
+      padding: 0 56px;
+      height: 60px;
+      display: flex;
+      align-items: flex-end;
+    }
+    /* The flex row: align-items:flex-end lets the logo bottom anchor everything.
+       Each child uses margin-bottom to lift to the correct baseline. */
+    .header-inner {
+      display: flex;
+      align-items: flex-end;
+      gap: 16px;
+      padding-bottom: 0;
+      margin-bottom: 8px;
+    }
+    .header-logo {
+      display: block;
+      color: var(--white);      /* fill:currentColor inherits this */
+      line-height: 0;
+      flex-shrink: 0;
+    }
+    /* Pipe: height=21px spans the visible letter stroke zone;
+       margin-bottom=14px lifts it to align with the wordmark baseline */
+    .header-pipe {
+      display: block;
+      width: 1px;
+      height: 21px;
+      background: var(--azure);
+      flex-shrink: 0;
+      margin-bottom: 14px;
+    }
+    /* Label: margin-bottom=11px lifts it to sit on the wordmark baseline */
+    .header-label {
+      font-size: 14.67px;
+      line-height: 18.67px;
+      font-weight: 400;
+      color: var(--light-gray);
+      margin-bottom: 11px;
+      white-space: nowrap;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      background: var(--navy);
+      color: var(--white);
+      padding: 88px 56px 80px;
+    }
+    .overline {
+      font-size: 14.67px;
+      line-height: 18.67px;
+      font-weight: 700;
+      color: var(--azure);
+      letter-spacing: 0.06em;
+      margin-bottom: 28px;
+    }
+    .hero h1 {
+      font-size: 66.67px;
+      line-height: 77.33px;
+      font-weight: 400;
+      color: var(--white);
+      max-width: 820px;
+      margin-bottom: 32px;
+    }
+    .hero-lead {
+      font-size: 18.67px;
+      line-height: 29.33px;
+      color: var(--light-gray);
+      max-width: 620px;
+    }
+    .hero-lead .accent { color: var(--azure); }
+
+    /* ── Main layout ── */
+    main {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 80px 56px 96px;
+    }
+    section { margin-bottom: 80px; }
+    section:last-child { margin-bottom: 0; }
+    .section-rule {
+      height: 1px;
+      background: var(--light-gray);
+      margin-bottom: 80px;
+    }
+
+    /* ── Typography ── */
+    h2 {
+      font-size: 38.67px;
+      line-height: 48px;
+      font-weight: 400;
+      margin-bottom: 12px;
+    }
+    .section-intro {
+      font-size: 18.67px;
+      line-height: 29.33px;
+      max-width: 680px;
+      margin-bottom: 40px;
+    }
+    .section-intro .accent { color: var(--azure); }
+    p { font-size: 17.33px; line-height: 25.33px; margin-bottom: 16px; }
+    p:last-child { margin-bottom: 0; }
+
+    /* ── 2-col info grid ── */
+    .what-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border: 1px solid var(--light-gray);
+      margin-top: 40px;
+    }
+    .what-item {
+      padding: 32px 36px;
+      border-bottom: 1px solid var(--light-gray);
+      border-right: 1px solid var(--light-gray);
+    }
+    .what-item:nth-child(even) { border-right: none; }
+    .what-item:nth-last-child(-n+2) { border-bottom: none; }
+    .what-label {
+      font-size: 14.67px;
+      line-height: 18.67px;
+      font-weight: 700;
+      color: var(--azure);
+      margin-bottom: 8px;
+    }
+    .what-value { font-size: 17.33px; line-height: 25.33px; }
+
+    /* ── Steps ── */
+    .steps { margin-top: 40px; display: flex; flex-direction: column; }
+    .step {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 0 28px;
+      padding-bottom: 44px;
+    }
+    .step:last-child { padding-bottom: 0; }
+    .step-left { display: flex; flex-direction: column; align-items: center; }
+    .step-num {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--azure); color: var(--white);
+      font-size: 14.67px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; z-index: 1;
+    }
+    .step-line { width: 1px; flex: 1; background: var(--light-gray); margin-top: 8px; }
+    .step:last-child .step-line { display: none; }
+    .step-body { padding-top: 6px; }
+    .step-title { font-size: 17.33px; line-height: 25.33px; font-weight: 700; margin-bottom: 6px; }
+    .step-desc { font-size: 17.33px; line-height: 25.33px; }
+    .step-note { font-size: 14.67px; line-height: 18.67px; color: var(--azure); font-weight: 700; margin-top: 6px; }
+
+    /* ── Reviewer cards ── */
+    .reviewer-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      background: var(--light-gray);
+      margin-top: 40px;
+    }
+    .reviewer-card { background: var(--white); padding: 36px 32px 40px; }
+    .reviewer-tag { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
+    .reviewer-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--azure); flex-shrink: 0; }
+    .reviewer-label { font-size: 14.67px; line-height: 18.67px; font-weight: 700; color: var(--azure); }
+    .reviewer-title { font-size: 29.33px; line-height: 38.67px; font-weight: 400; margin-bottom: 8px; }
+    .reviewer-focus { font-size: 14.67px; line-height: 18.67px; opacity: 0.6; margin-bottom: 24px; }
+    .check-list { list-style: none; }
+    .check-list li {
+      font-size: 14.67px; line-height: 18.67px;
+      padding: 8px 0; border-top: 1px solid var(--light-gray);
+      display: flex; gap: 10px; align-items: flex-start;
+    }
+    .check-list li::before {
+      content: ""; display: block;
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--light-gray); flex-shrink: 0; margin-top: 6px;
+    }
+    .check-list li.logo-check::before { background: var(--azure); }
+
+    /* ── Logo section ── */
+    .logo-demo-wrap {
+      margin-top: 40px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      background: var(--light-gray);
+    }
+    .logo-demo {
+      background: var(--white);
+      padding: 36px 40px;
+    }
+    .logo-demo.dark { background: var(--navy); }
+    .logo-demo-label {
+      font-size: 14.67px; line-height: 18.67px; font-weight: 700;
+      color: var(--azure); margin-bottom: 20px;
+    }
+    .logo-demo.dark .logo-demo-label { color: var(--azure); }
+    .logo-demo-note {
+      font-size: 14.67px; line-height: 18.67px; margin-top: 16px; opacity: 0.65;
+    }
+    .logo-demo.dark .logo-demo-note { color: var(--light-gray); }
+
+    /* Header alignment diagram */
+    .alignment-diagram {
+      background: var(--navy);
+      padding: 36px 40px;
+      margin-top: 40px;
+      display: flex;
+      align-items: flex-end;
+      gap: 16px;
+      position: relative;
+    }
+    .diag-logo { color: var(--white); line-height: 0; flex-shrink: 0; }
+    .diag-pipe {
+      display: block; width: 1px; height: 21px;
+      background: var(--azure); flex-shrink: 0; margin-bottom: 14px;
+    }
+    .diag-label {
+      font-size: 14.67px; line-height: 18.67px;
+      color: var(--light-gray); margin-bottom: 11px; white-space: nowrap;
+    }
+    /* annotation lines */
+    .diag-annotations {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .annotation-row {
+      background: var(--light-blue);
+      padding: 40px 40px 16px;
+      margin-top: 16px;
+    }
+    .annotation-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .annotation-item {}
+    .annotation-prop {
+      font-size: 14.67px; line-height: 18.67px; font-weight: 700; color: var(--navy); margin-bottom: 4px;
+    }
+    .annotation-val {
+      font-family: 'Inter', monospace; font-size: 13.33px; line-height: 18px; color: var(--azure);
+    }
+
+    /* File selection table */
+    .file-table {
+      width: 100%; border-collapse: collapse; margin-top: 32px;
+    }
+    .file-table th {
+      background: var(--navy); color: var(--white);
+      font-size: 14.67px; font-weight: 700;
+      padding: 12px 24px; text-align: left;
+    }
+    .file-table td {
+      padding: 14px 24px; border-bottom: 1px solid var(--light-gray);
+      font-size: 14.67px; line-height: 18.67px; vertical-align: top;
+    }
+    .file-table tr:last-child td { border-bottom: none; }
+    .file-table td:first-child { font-weight: 700; color: var(--navy); width: 28%; }
+    .file-table code {
+      font-family: 'Inter', 'Helvetica Neue', monospace;
+      font-size: 13px; color: var(--azure);
+      background: var(--light-blue); padding: 1px 5px;
+    }
+
+    /* ── Iteration table ── */
+    .iter-table { width: 100%; border-collapse: collapse; margin-top: 40px; }
+    .iter-table thead tr { background: var(--navy); }
+    .iter-table th { padding: 14px 28px; font-size: 14.67px; font-weight: 700; color: var(--white); text-align: left; }
+    .iter-table td { padding: 18px 28px; font-size: 17.33px; line-height: 25.33px; border-bottom: 1px solid var(--light-gray); }
+    .iter-table tr:last-child td { border-bottom: none; }
+    .iter-table .col-draft { width: 100px; font-weight: 700; color: var(--azure); }
+    .iter-table tr.final-row td { background: var(--light-blue); }
+    .iter-table .col-draft.final { color: var(--navy); }
+
+    /* ── Format chips ── */
+    .formats-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 40px; }
+    .format-chip {
+      padding: 10px 20px; border: 1px solid var(--light-gray);
+      font-size: 14.67px; line-height: 18.67px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .format-chip::before {
+      content: ""; display: block; width: 6px; height: 6px;
+      border-radius: 50%; background: var(--azure); flex-shrink: 0;
+    }
+
+    /* ── Trigger section ── */
+    .trigger-wrap { background: var(--light-blue); padding: 40px 40px 36px; margin-top: 40px; }
+    .trigger-intro { font-size: 17.33px; line-height: 25.33px; margin-bottom: 24px; }
+    .trigger-phrases { display: flex; flex-wrap: wrap; gap: 10px; }
+    .trigger-phrase {
+      background: var(--white); border: 1px solid rgba(6,166,237,0.35);
+      padding: 8px 18px; font-size: 14.67px; line-height: 18.67px;
+    }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--navy);
+      color: var(--white);
+      padding: 0 56px;
+      height: 72px;
+      display: flex;
+      align-items: flex-end;
+    }
+    .footer-inner {
+      width: 100%;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding-bottom: 0;
+      margin-bottom: 16px;
+    }
+    .footer-left {
+      display: flex;
+      align-items: flex-end;
+      gap: 16px;
+    }
+    .footer-logo {
+      display: block;
+      color: var(--white);
+      line-height: 0;
+      flex-shrink: 0;
+    }
+    .footer-pipe {
+      display: block; width: 1px; height: 21px;
+      background: var(--azure); flex-shrink: 0; margin-bottom: 14px;
+    }
+    .footer-label {
+      font-size: 14.67px; line-height: 18.67px;
+      color: var(--light-gray); margin-bottom: 11px;
+    }
+    .footer-tagline {
+      font-size: 17.33px; line-height: 25.33px;
+      color: var(--azure); margin-bottom: 11px;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      header { padding: 0 24px; }
+      .hero { padding: 56px 24px 48px; }
+      .hero h1 { font-size: 38.67px; line-height: 48px; }
+      main { padding: 56px 24px 72px; }
+      .what-grid { grid-template-columns: 1fr; }
+      .what-item { border-right: none !important; }
+      .what-item:nth-last-child(-n+2) { border-bottom: 1px solid var(--light-gray) !important; }
+      .what-item:last-child { border-bottom: none !important; }
+      .reviewer-grid { grid-template-columns: 1fr; }
+      .logo-demo-wrap { grid-template-columns: 1fr; }
+      .annotation-grid { grid-template-columns: 1fr; }
+      footer { padding: 0 24px; height: auto; }
+      .footer-inner { flex-direction: column; align-items: flex-start; gap: 12px; padding: 24px 0; margin-bottom: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════
+     HEADER
+     Logo: White-only SVG (dark background)
+     Alignment: align-items:flex-end on .header-inner
+     Pipe: height:21px, margin-bottom:14px
+     Label: margin-bottom:11px
+════════════════════════════════════════════════ -->
+<header>
+  <div class="header-inner">
+
+    <a class="header-logo" href="#" aria-label="Spanner">
+      <!-- White-only wordmark — fill:currentColor inherits color:white from .header-logo -->
+      <!-- In production: replace <text> with full path data from
+           Logo/0_Spanner Logo Package/150810_Spanner_Logo_White-only.svg -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 813.16 170.95"
+           style="height:36px;width:auto;fill:currentColor" aria-hidden="true">
+        <text x="4" y="116"
+              font-family="'Inter','Helvetica Neue',Helvetica,sans-serif"
+              font-weight="400" font-size="134" fill="currentColor">spanner</text>
+      </svg>
+    </a>
+
+    <span class="header-pipe" aria-hidden="true"></span>
+    <span class="header-label">skills reference</span>
+
+  </div>
+</header>
+
+
+<!-- ═══════════════════════════════════════════════
+     HERO — Navy background
+════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="overline">Skill Reference</div>
+  <h1>spanner&#8209;design&#8209;loop</h1>
+  <p class="hero-lead">
+    An internal review loop that runs up to four design iterations before anything reaches the user.
+    <span class="accent">No unreviewed drafts.</span> Every visual output passes three expert reviewers — and now includes
+    logo selection and alignment as first-class compliance checks.
+  </p>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     MAIN
+════════════════════════════════════════════════ -->
+<main>
+
+  <!-- What it does -->
+  <section>
+    <h2>what it does</h2>
+    <p class="section-intro">Instead of generating a first draft and handing it over, the design loop produces, critiques, and refines visual output silently — presenting only work that all three reviewers accept.</p>
+    <div class="what-grid">
+      <div class="what-item">
+        <div class="what-label">applies to</div>
+        <div class="what-value">Any visual deliverable — HTML, PPTX, DOCX, SVG, infographic, email template</div>
+      </div>
+      <div class="what-item">
+        <div class="what-label">brand references</div>
+        <div class="what-value">Loads /spanner-brand-visual-120 (Steps 6, 7, 9 for logo) and /spanner-brand-voice before every build</div>
+      </div>
+      <div class="what-item">
+        <div class="what-label">iteration limit</div>
+        <div class="what-value">Maximum four drafts. Unresolved issues at Draft 4 are noted in the design notes handoff.</div>
+      </div>
+      <div class="what-item">
+        <div class="what-label">what the user sees</div>
+        <div class="what-value">Final output + a short design notes section covering logo choice, alignment, and brand decisions.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-rule"></div>
+
+  <!-- How it works -->
+  <section>
+    <h2>how it works</h2>
+    <p class="section-intro">Six steps run internally before output surfaces. Steps 3–5 repeat until all reviewers pass.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-left"><div class="step-num">0</div><div class="step-line"></div></div>
+        <div class="step-body">
+          <div class="step-title">load brand references</div>
+          <div class="step-desc">Reads /spanner-brand-visual-120 in full — with special attention to Step 6 (logo spec), Step 7 (file library and selection logic), and Step 9 (HTML baseline and header alignment). Also reads /spanner-brand-voice. These two skills are the design constitution.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-left"><div class="step-num">1</div><div class="step-line"></div></div>
+        <div class="step-body">
+          <div class="step-title">understand the brief</div>
+          <div class="step-desc">Confirms output format, purpose, audience, required content, background mode, every logo placement location, and special constraints. Nothing is built until all are answered.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-left"><div class="step-num">2</div><div class="step-line"></div></div>
+        <div class="step-body">
+          <div class="step-title">build Draft 1 — select and place the logo</div>
+          <div class="step-desc">Selects the correct logo file for each placement based on background mode, applies it at the correct size (height:45px for HTML), and applies the baseline alignment spec for any logo appearing in a header row alongside a pipe and label. Full brand spec applied throughout.</div>
+          <div class="step-note">silent</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-left"><div class="step-num">3</div><div class="step-line"></div></div>
+        <div class="step-body">
+          <div class="step-title">run the three-reviewer critique</div>
+          <div class="step-desc">Design Director checks logo file selection, clearspace, and header alignment first — before any other visual criteria. Subject Matter Expert and Project Manager check their domains. Issues are flagged as specific, actionable items.</div>
+          <div class="step-note">silent</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-left"><div class="step-num">4</div><div class="step-line"></div></div>
+        <div class="step-body">
+          <div class="step-title">iterate until all three pass</div>
+          <div class="step-desc">Every flagged issue is fixed and re-reviewed. Runs for up to four drafts. Unresolved issues at Draft 4 are carried into the design notes.</div>
+          <div class="step-note">silent · repeats</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-left"><div class="step-num">5</div></div>
+        <div class="step-body">
+          <div class="step-title">present final output with design notes</div>
+          <div class="step-desc">The finished file surfaces alongside a design notes section: logo file chosen, alignment approach, other brand decisions, limitations, and any open issues.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-rule"></div>
+
+  <!-- Logo & alignment — new section -->
+  <section>
+    <h2>logo &amp; alignment</h2>
+    <p class="section-intro">The design loop now treats logo selection and alignment as first-class requirements. Reviewer A checks these before anything else.</p>
+
+    <!-- Live demo: light vs dark -->
+    <div class="logo-demo-wrap">
+      <div class="logo-demo">
+        <div class="logo-demo-label">light background — Azure 2024 logo</div>
+        <!-- Azure 2024 logo: navy/azure color on white -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 813.16 170.95"
+             style="height:45px;width:auto;fill:var(--azure)" aria-label="Spanner">
+          <text x="4" y="116"
+                font-family="'Inter','Helvetica Neue',Helvetica,sans-serif"
+                font-weight="400" font-size="134" fill="currentColor">spanner</text>
+        </svg>
+        <div class="logo-demo-note">Use Spanner_Logo_Azure_2024.svg inline or Spanner_Logo_Azure_2024_640px.png for raster</div>
+      </div>
+      <div class="logo-demo dark">
+        <div class="logo-demo-label">dark background — White-only logo</div>
+        <!-- White-only logo: fill:currentColor, color:white on parent -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 813.16 170.95"
+             style="height:45px;width:auto;fill:currentColor;color:#ffffff" aria-label="Spanner">
+          <text x="4" y="116"
+                font-family="'Inter','Helvetica Neue',Helvetica,sans-serif"
+                font-weight="400" font-size="134" fill="currentColor">spanner</text>
+        </svg>
+        <div class="logo-demo-note">Use 150810_Spanner_Logo_White-only.svg with fill:currentColor</div>
+      </div>
+    </div>
+
+    <!-- File selection table -->
+    <table class="file-table" style="margin-top:32px">
+      <thead>
+        <tr><th>Surface</th><th>Logo file</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>HTML on white/light</td>
+          <td><code>2024_Azure_Refresh/Spanner_Logo_Azure_2024.svg</code> inline at <code>height:45px</code></td>
+        </tr>
+        <tr>
+          <td>HTML on Navy / dark</td>
+          <td>White-only SVG inline at <code>height:45px</code> — set <code>fill:currentColor</code></td>
+        </tr>
+        <tr>
+          <td>PPTX / DOCX light</td>
+          <td><code>Spanner_Logo_Azure_2024_640px.png</code> (1280px for hero slides)</td>
+        </tr>
+        <tr>
+          <td>PPTX / DOCX Navy</td>
+          <td><code>Spanner-Logo-White-Rev-01.png</code></td>
+        </tr>
+        <tr>
+          <td>Email signature</td>
+          <td><code>Spanner_Logo_Azure_2024_320px.png</code> on light; Dark Gray PNG as fallback</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Alignment diagram -->
+    <div style="margin-top:40px">
+      <div class="what-label" style="margin-bottom:16px">header baseline alignment</div>
+
+      <!-- Live header demo -->
+      <div class="alignment-diagram">
+        <div class="diag-logo">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 813.16 170.95"
+               style="height:36px;width:auto;fill:currentColor;color:#ffffff" aria-hidden="true">
+            <text x="4" y="116"
+                  font-family="'Inter','Helvetica Neue',Helvetica,sans-serif"
+                  font-weight="400" font-size="134" fill="currentColor">spanner</text>
+          </svg>
+        </div>
+        <span class="diag-pipe"></span>
+        <span class="diag-label">section title</span>
+      </div>
+
+      <!-- Annotation row -->
+      <div class="annotation-row">
+        <div class="annotation-grid">
+          <div class="annotation-item">
+            <div class="annotation-prop">flex row</div>
+            <div class="annotation-val">align-items: flex-end</div>
+          </div>
+          <div class="annotation-item">
+            <div class="annotation-prop">pipe (Azure divider)</div>
+            <div class="annotation-val">height: 21px<br>margin-bottom: 14px</div>
+          </div>
+          <div class="annotation-item">
+            <div class="annotation-prop">adjacent label</div>
+            <div class="annotation-val">margin-bottom: 11px</div>
+          </div>
+        </div>
+        <p style="font-size:14.67px;line-height:18.67px;margin-top:20px;opacity:0.7">
+          The wordmark SVG has descender space at the bottom — visible letter strokes occupy ~22–68% of SVG height. Using <code style="font-size:13px;color:var(--azure)">align-items:flex-end</code> anchors all three elements at the same bottom edge. The pipe and label then use <code style="font-size:13px;color:var(--azure)">margin-bottom</code> to lift to the correct optical baseline.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-rule"></div>
+
+  <!-- Three reviewers -->
+  <section>
+    <h2>the three reviewers</h2>
+    <p class="section-intro"><span class="accent">All three must pass</span> before output is shown. Reviewer A now leads with logo compliance.</p>
+    <div class="reviewer-grid">
+      <div class="reviewer-card">
+        <div class="reviewer-tag"><div class="reviewer-dot"></div><span class="reviewer-label">Reviewer A</span></div>
+        <div class="reviewer-title">Design Director</div>
+        <div class="reviewer-focus">Visual craft, brand fidelity, logo compliance</div>
+        <ul class="check-list">
+          <li class="logo-check">Correct logo file for this surface and background</li>
+          <li class="logo-check">Logo from approved folder — not Archive</li>
+          <li class="logo-check">height:45px; no skew, rotation, shadow, or stroke</li>
+          <li class="logo-check">Header: align-items:flex-end; pipe 21px/mb14; label mb11</li>
+          <li class="logo-check">Clearspace respected on all sides</li>
+          <li>Inter — 120% type scale exact</li>
+          <li>Navy text; white/navy backgrounds</li>
+          <li>Azure accents — one method only</li>
+          <li>Lowercase headers; no ALL CAPS</li>
+          <li>Feels like a premium studio made it</li>
+        </ul>
+      </div>
+      <div class="reviewer-card">
+        <div class="reviewer-tag"><div class="reviewer-dot"></div><span class="reviewer-label">Reviewer B</span></div>
+        <div class="reviewer-title">Subject Matter Expert</div>
+        <div class="reviewer-focus">Content accuracy, completeness, usefulness</div>
+        <ul class="check-list">
+          <li>All required information present</li>
+          <li>Hierarchy matches importance</li>
+          <li>Precise labels — no generic copy</li>
+          <li>Data and facts correct</li>
+          <li>No filler or placeholder text</li>
+          <li>Clear for the target audience</li>
+          <li>Nothing missing; nothing irrelevant</li>
+        </ul>
+      </div>
+      <div class="reviewer-card">
+        <div class="reviewer-tag"><div class="reviewer-dot"></div><span class="reviewer-label">Reviewer C</span></div>
+        <div class="reviewer-title">Project Manager</div>
+        <div class="reviewer-focus">Usability, clarity, goal achievement</div>
+        <ul class="check-list">
+          <li>Purpose obvious in &lt; 3 seconds</li>
+          <li>Single, specific call to action</li>
+          <li>Structure fits content and format</li>
+          <li>No dead ends</li>
+          <li>Appropriate delivery context</li>
+          <li>No unexplained jargon</li>
+          <li>Achieves stated goal</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-rule"></div>
+
+  <!-- Iteration budget -->
+  <section>
+    <h2>iteration budget</h2>
+    <p class="section-intro">Maximum four drafts. Intermediate work and critique summaries are never shown.</p>
+    <table class="iter-table">
+      <thead>
+        <tr><th style="width:110px">Draft</th><th>Action</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="col-draft">1</td><td>Build per brief and brand spec — select and place logo first</td></tr>
+        <tr><td class="col-draft">2</td><td>Fix logo alignment and all other Reviewer A/B/C issues from Draft 1</td></tr>
+        <tr><td class="col-draft">3</td><td>Fix remaining issues from Draft 2</td></tr>
+        <tr><td class="col-draft">4</td><td>Final pass — resolve what can be resolved; note what remains</td></tr>
+        <tr class="final-row"><td class="col-draft final">→</td><td><strong>Present output with design notes</strong></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <div class="section-rule"></div>
+
+  <!-- Supported formats -->
+  <section>
+    <h2>supported formats</h2>
+    <p class="section-intro">The same review standard applies to every format. Reviewer A adapts logo and format-specific checks accordingly.</p>
+    <div class="formats-grid">
+      <div class="format-chip">HTML artifact</div>
+      <div class="format-chip">PowerPoint deck (PPTX)</div>
+      <div class="format-chip">Word document (DOCX)</div>
+      <div class="format-chip">SVG illustration</div>
+      <div class="format-chip">Infographic</div>
+      <div class="format-chip">Email template</div>
+      <div class="format-chip">Landing page</div>
+      <div class="format-chip">Status page</div>
+      <div class="format-chip">Dashboard</div>
+      <div class="format-chip">Report</div>
+    </div>
+  </section>
+
+  <div class="section-rule"></div>
+
+  <!-- Trigger phrases -->
+  <section>
+    <h2>how to trigger it</h2>
+    <p class="section-intro">Claude invokes the design loop automatically on any of these phrases, or whenever a visual output needs to follow Spanner brand guidelines.</p>
+    <div class="trigger-wrap">
+      <p class="trigger-intro">Say any of these — the loop starts without naming the skill explicitly.</p>
+      <div class="trigger-phrases">
+        <span class="trigger-phrase">build a branded HTML page</span>
+        <span class="trigger-phrase">create a Spanner report</span>
+        <span class="trigger-phrase">make an HTML dashboard for Spanner</span>
+        <span class="trigger-phrase">design a [format] for Spanner</span>
+        <span class="trigger-phrase">make this on-brand</span>
+        <span class="trigger-phrase">create a Spanner deck</span>
+        <span class="trigger-phrase">build a branded infographic</span>
+        <span class="trigger-phrase">design a status page</span>
+        <span class="trigger-phrase">create a Spanner doc</span>
+        <span class="trigger-phrase">design a landing page for Spanner</span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+
+<!-- ═══════════════════════════════════════════════
+     FOOTER — same alignment spec as header
+════════════════════════════════════════════════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-left">
+      <a class="footer-logo" href="#" aria-label="Spanner">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 813.16 170.95"
+             style="height:28px;width:auto;fill:currentColor" aria-hidden="true">
+          <text x="4" y="116"
+                font-family="'Inter','Helvetica Neue',Helvetica,sans-serif"
+                font-weight="400" font-size="134" fill="currentColor">spanner</text>
+        </svg>
+      </a>
+      <span class="footer-pipe" aria-hidden="true"></span>
+      <span class="footer-label">skills reference</span>
+    </div>
+    <span class="footer-tagline">what's next.</span>
+  </div>
+</footer>
+
+</body>
+</html>
